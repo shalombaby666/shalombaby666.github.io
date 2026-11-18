@@ -23,6 +23,10 @@ $('#enemy-board').onclick=e=>{const b=e.target.closest('[data-cell]');if(!b||gam
 
 function enhanceCase(p){
  const root=$('#project-detail');
+ const share=document.createElement('div');share.className='case-share';
+ const shareButton=document.createElement('button');shareButton.type='button';shareButton.className='underlink';shareButton.dataset.share=p.id;shareButton.textContent='Скопировать ссылку на кейс';
+ const shareStatus=document.createElement('span');shareStatus.className='share-status';shareStatus.setAttribute('role','status');share.append(shareButton,shareStatus);root.querySelector('h2').after(share);
+
  if(p.contribution){const box=document.createElement('section');box.className='contribution-panel';const h=document.createElement('h3');h.textContent='Задачи в проекте';const text=document.createElement('p');text.textContent=p.contribution;box.append(h,text);root.append(box);}
  if(p.image&&!root.querySelector('.case-preview')){const img=document.createElement('img');img.src=p.image;img.alt='Материалы проекта '+p.name;img.className='case-preview';root.append(img);}
  if(p.gallery){const details=document.createElement('details');details.className='case-gallery';const summary=document.createElement('summary');summary.textContent='Посмотреть ещё графики';details.append(summary);for(const [src,alt] of p.gallery){const img=document.createElement('img');img.src=src;img.alt=alt;img.loading='lazy';details.append(img);}root.append(details);}
