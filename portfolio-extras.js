@@ -17,3 +17,9 @@ document.addEventListener('click',async event=>{
  }
  finally{button.disabled=false;}
 });
+
+const backTop=document.getElementById('back-top');
+let scrollFrame=0;
+function updateBackTop(){backTop.hidden=window.scrollY<900;scrollFrame=0;}
+window.addEventListener('scroll',()=>{if(!scrollFrame)scrollFrame=requestAnimationFrame(updateBackTop);},{passive:true});
+updateBackTop();
