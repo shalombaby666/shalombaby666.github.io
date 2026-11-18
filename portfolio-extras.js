@@ -1,4 +1,4 @@
-import {projects} from './projects.js?v=20261118-layout';
+import {projects} from './projects.js?v=20261118-identity';
 
 for(const [id,count] of [
  ['stat-projects',projects.length],

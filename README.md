@@ -23,11 +23,17 @@
 | [Учебная база заказов](https://shalombaby666.github.io/#project=sql-study) | Связи, ключи, ограничения и границы модели |
 | [Цены на нефть](https://shalombaby666.github.io/#project=oil) | Исследовательский черновик с графиками и оговорками |
 
-**[Все 15 проектов](https://shalombaby666.github.io/#work)** · [Шпаргалки аналитика](https://shalombaby666.github.io/analyst-notes.html)
+**[Все 17 проектов](https://shalombaby666.github.io/#work)** · [Шпаргалки аналитика](https://shalombaby666.github.io/analyst-notes.html)
 
 ### Учебные веб-проекты
 
 [Sprouts — английские карточки](https://shalombaby666.github.io/sprouts/) · [География Европы — два теста](https://shalombaby666.github.io/europe-geography/) · [Минправ — словарь «1984»](https://shalombaby666.github.io/minprav-1984/)
+
+### Roblox — наработки
+
+[Тыквенный приют / PumpkinHaunt](https://shalombaby666.github.io/#project=pumpkin) · [Пепельные земли](https://shalombaby666.github.io/#project=ashlands)
+
+Оба проекта не завершены. В портфолио — состояние разработки и схемы; запуск текущих сцен ещё предстоит проверить.
 
 ### Можно поиграть
 
