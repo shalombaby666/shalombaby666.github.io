@@ -1,4 +1,4 @@
-import {projects} from './projects.js';
+import {projects} from './projects.js?v=20261118-layout';
 import {renderQuest} from './quests.js';
 import {createFleet,shoot} from './battleship.js';
 const $=s=>document.querySelector(s);
