@@ -1,32 +1,32 @@
-<a href="https://shalombaby666.github.io/"><img src="assets/profile-banner.png" alt="Денис — пишу код, собираю миры" width="1200"></a>
+<a href="https://shalombaby666.github.io/"><img src="assets/profile-banner.png" alt="Денис — данные и системы" width="1200"></a>
 
-# Денис / проекты и эксперименты
+### Привет, я Денис
 
-[Открыть портфолио](https://shalombaby666.github.io/) · [Проектное резюме](https://shalombaby666.github.io/resume.html) · [PDF](https://shalombaby666.github.io/denis-resume.pdf)
+Мне 18 лет, учусь на втором курсе по направлению бизнес-аналитики. Ищу первую работу **аналитиком данных или системным аналитиком**.
 
-Браузерные игры, инструменты для данных, автоматизация и командные хакатонные прототипы. В витрине — 11 проектов, проверенные демо и разборы решений.
+**[Портфолио](https://shalombaby666.github.io/) · [Резюме](https://shalombaby666.github.io/resume.html) · [PDF](https://shalombaby666.github.io/denis-resume.pdf) · [Telegram @shalombaby777](https://t.me/shalombaby777)**
 
-## Попробовать
+Работаю с **SQL, базами данных, Python/pandas и Яндекс DataLens**. Также использую **Java, C#, HTML и CSS**. Завершил курсы HTML/CSS. В учебных работах — R, dplyr и ggplot2.
+
+### Кейсы
 
 | Проект | Что внутри |
 | --- | --- |
-| [SandFox](https://shalombaby666.github.io/SandFox/) | Клеточная песочница и ambient-миры |
-| [Two Gamers](https://shalombaby666.github.io/two-gamers/) | Три аркады для двух игроков на одном устройстве |
-| [Starman’s Stare](https://shalombaby666.github.io/starmans-stare/) | Космический веб-клуб, атлас, сравнения и квиз |
-| [Snow Running](https://shalombaby666.github.io/snow-running/) | Пиксельная зимняя аркада и ледяные лабиринты |
+| [AlfaHack](https://shalombaby666.github.io/#project=alfa) | Командный прототип кредитного кабинета: путь заявки, документы и правила решения |
+| [RepairCalc / SPBTechRun](https://shalombaby666.github.io/#project=repair) | Расчёт материалов и каталог. Моя роль: ML, данные и организация |
+| [Бот обращений](https://shalombaby666.github.io/#project=appeals) | Каналы, маршрутизация, ответы оператора и статусы |
+| [Учебная аналитика на R](https://shalombaby666.github.io/#project=r-sales) | Продажи по регионам, графики и сверка итогов |
+| [Учебная база заказов](https://shalombaby666.github.io/#project=sql-study) | Связи, ключи, ограничения и границы модели |
+| [Цены на нефть](https://shalombaby666.github.io/#project=oil) | Исследовательский черновик с графиками и оговорками |
 
-## Разобрать
+**[Все 15 проектов](https://shalombaby666.github.io/#work)** · [Шпаргалки аналитика](https://shalombaby666.github.io/analyst-notes.html)
 
-- [AlfaHack](https://shalombaby666.github.io/#project=alfa) — командный кредитный кабинет.
-- [RepairCalc / SPBTechRun](https://shalombaby666.github.io/#project=repair) — расчёт материалов и каталог товаров.
-- [Проверка выгрузки](https://shalombaby666.github.io/#project=quality) — качество CSV/Excel.
-- [Двойник](https://shalombaby666.github.io/#project=bridge) — Telegram ↔ MAX.
-- [Sprouts](https://shalombaby666.github.io/#project=sprouts), [География Европы](https://shalombaby666.github.io/#project=geo), [Минправ](https://shalombaby666.github.io/#project=minprav) — интерактивные артефакты.
+### Можно поиграть
 
-## Персонаж и локации
+[SandFox](https://shalombaby666.github.io/SandFox/) · [Two Gamers](https://shalombaby666.github.io/two-gamers/) · [Starman’s Stare](https://shalombaby666.github.io/starmans-stare/) · [Snow Running](https://shalombaby666.github.io/snow-running/)
 
-[Ещё один отклик](https://shalombaby666.github.io/character-world.html) · [Петербург и Оренбург](https://shalombaby666.github.io/cities.html)
+Мой пиксельный герой живёт [в отдельной истории](https://shalombaby666.github.io/character-world.html) и [будущих маршрутах по Петербургу и Оренбургу](https://shalombaby666.github.io/cities.html).
 
-Это репозиторий самого сайта-портфолио. Закрытые исходники представленных проектов не включены. Интерактивные примеры внутри хакатонных кейсов подписаны как упрощённые иллюстрации. Личный вклад и результаты командных проектов не подменяются выдуманными метриками.
+---
 
-Локальный просмотр: `python -m http.server 4175 --bind 127.0.0.1`.
+Показываю выбранные материалы и демонстрации. Исходники закрытых проектов остаются приватными; в командных кейсах отдельно отмечаю свою роль. Подтверждённые сертификаты добавлю позже.
