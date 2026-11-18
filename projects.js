@@ -29,3 +29,10 @@ projects.find(p=>p.id==='repair').video='assets/video/repair-review.mp4';
 projects.find(p=>p.id==='repair').videoLabel='Запись кликабельного прототипа RepairCalc на демонстрационных данных';
 projects.find(p=>p.id==='alfa').video='assets/video/alfa-review.mp4';
 projects.find(p=>p.id==='alfa').videoLabel='Видеоразбор пути заявки и сохранённого экрана прототипа; это не запись работающего банковского сервиса';
+
+for(const [id,repo] of [['sprouts','sprouts'],['geo','europe-geography'],['minprav','minprav-1984']]){
+ const p=projects.find(p=>p.id===id);p.url='https://shalombaby666.github.io/'+repo+'/';p.github='https://github.com/shalombaby666/'+repo;p.status='Демо';
+}
+Object.assign(projects.find(p=>p.id==='sprouts'),{description:'Автономное приложение для английских слов: две колоды, 76 слов, повторение и статистика.',tags:['JavaScript','localStorage','Карточки'],result:'Опубликована автономная версия без серверной базы. Прогресс сохраняется в браузере посетителя и не синхронизируется между устройствами.',decisions:['Две колоды: общая лексика и Tech & IT.','Повторение, выбор ответа и ввод перевода.','Локальное сохранение прогресса без аккаунта.']});
+Object.assign(projects.find(p=>p.id==='geo'),{description:'Два браузерных теста: найти страну на карте Европы и выбрать её столицу. Случайные вопросы, результат и повторный запуск.',result:'Оба теста доступны на GitHub Pages. Карта и маска кликов восстановлены из Natural Earth; работают без базы данных.',decisions:['Случайная выборка и перемешивание вопросов.','Проверка попадания по маске территории страны.','Обратная связь, итоговый счёт и повторная попытка.']});
+Object.assign(projects.find(p=>p.id==='minprav'),{result:'Словарь опубликован на GitHub Pages: поиск, разделы, визуальный архив и варианты оформления. Изображения восстановлены локально.',decisions:['Словарная структура, разделы и поиск.','Визуальный архив с подписями.','Варианты оформления и звук по желанию посетителя.']});

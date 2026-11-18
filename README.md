@@ -21,6 +21,10 @@
 
 **[Все 15 проектов](https://shalombaby666.github.io/#work)** · [Шпаргалки аналитика](https://shalombaby666.github.io/analyst-notes.html)
 
+### Учебные веб-проекты
+
+[Sprouts — английские карточки](https://shalombaby666.github.io/sprouts/) · [География Европы — два теста](https://shalombaby666.github.io/europe-geography/) · [Минправ — словарь «1984»](https://shalombaby666.github.io/minprav-1984/)
+
 ### Можно поиграть
 
 [SandFox](https://shalombaby666.github.io/SandFox/) · [Two Gamers](https://shalombaby666.github.io/two-gamers/) · [Starman’s Stare](https://shalombaby666.github.io/starmans-stare/) · [Snow Running](https://shalombaby666.github.io/snow-running/)
