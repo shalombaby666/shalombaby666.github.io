@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Отток клиентов банка — дашборд</title>
+<style>
+:root {
+  color-scheme: light;
+  --bg: #f4f3f0;
+  --surface: #fcfcfb;
+  --text: #0b0b0b;
+  --text-2: #52514e;
+  --text-3: #75746f;
+  --hair: #e4e3de;
+  --series: #2a78d6;
+  --series-hover: #1c5cab;
+  --track: #f0efec;
+  --critical: #d03b3b;
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    color-scheme: dark;
+    --bg: #111110;
+    --surface: #1a1a19;
+    --text: #ffffff;
+    --text-2: #c3c2b7;
+    --text-3: #9a998f;
+    --hair: #2e2e2b;
+    --series: #3987e5;
+    --series-hover: #6da7ec;
+    --track: #262624;
+    --critical: #e66767;
+  }
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  line-height: 1.45;
+}
+.wrap { max-width: 1180px; margin: 0 auto; padding: 24px 16px 40px; }
+h1 { font-size: 22px; font-weight: 650; letter-spacing: -0.01em; }
+.sub { color: var(--text-2); font-size: 13.5px; margin-top: 4px; max-width: 760px; }
+.filters {
+  display: flex; flex-wrap: wrap; gap: 12px 16px; align-items: flex-end;
+  margin: 20px 0 16px;
+}
+.filters label { display: block; font-size: 12px; color: var(--text-2); margin-bottom: 4px; }
+.filters select {
+  font: inherit; font-size: 13.5px; color: var(--text);
+  background: var(--surface); border: 1px solid var(--hair); border-radius: 8px;
+  padding: 7px 28px 7px 10px; min-width: 150px;
+}
+.filters button {
+  font: inherit; font-size: 13.5px; color: var(--text-2);
+  background: transparent; border: 1px solid var(--hair); border-radius: 8px;
+  padding: 7px 12px; cursor: pointer;
+}
+.filters button:hover { color: var(--text); border-color: var(--text-3); }
+select:focus-visible, button:focus-visible, .bar:focus-visible, summary:focus-visible {
+  outline: 2px solid var(--series); outline-offset: 2px;
+}
+.kpis { display: grid; grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); gap: 12px; margin-bottom: 12px; }
+.card {
+  background: var(--surface); border: 1px solid var(--hair); border-radius: 12px; padding: 16px 18px;
+}
+.kpi-label { font-size: 12.5px; color: var(--text-2); }
+.kpi-value { font-size: 30px; font-weight: 650; letter-spacing: -0.02em; margin-top: 2px; font-variant-numeric: tabular-nums; }
+.kpi-note { font-size: 12.5px; color: var(--text-2); margin-top: 2px; min-height: 18px; }
+.kpi-note b { color: var(--text); font-weight: 600; }
+.panels { display: grid; grid-template-columns: repeat(auto-fit, minmax(340px, 1fr)); gap: 12px; }
+.panel h2 { font-size: 15px; font-weight: 650; }
+.panel .hint { font-size: 12.5px; color: var(--text-2); margin: 2px 0 14px; }
+.rows { display: flex; flex-direction: column; gap: 10px; position: relative; }
+.row { display: grid; grid-template-columns: 112px 1fr 54px; gap: 10px; align-items: center; }
+.row .name { font-size: 13.5px; line-height: 1.2; }
+.row .name small { display: block; font-size: 11.5px; color: var(--text-3); margin-top: 1px; font-variant-numeric: tabular-nums; }
+.track { position: relative; height: 22px; background: var(--track); border-radius: 4px; }
+.bar {
+  position: absolute; left: 0; top: 0; bottom: 0; background: var(--series);
+  border-radius: 0 4px 4px 0; min-width: 2px; transition: width .25s ease;
+}
+.bar:hover, .bar.hot { background: var(--series-hover); }
+.avg {
+  position: absolute; top: -3px; bottom: -3px; width: 0; border-left: 1.5px dashed var(--text-2);
+  pointer-events: none;
+}
+.val { font-size: 13.5px; font-weight: 600; text-align: right; font-variant-numeric: tabular-nums; }
+.legend { font-size: 12px; color: var(--text-2); margin-top: 12px; display: flex; align-items: center; gap: 6px; }
+.legend i { display: inline-block; width: 0; height: 12px; border-left: 1.5px dashed var(--text-2); }
+.empty { color: var(--text-2); font-size: 13px; padding: 12px 0; }
+.insights { margin-top: 12px; }
+.insights h2 { font-size: 15px; font-weight: 650; margin-bottom: 8px; }
+.insights ul { margin-left: 18px; font-size: 13.5px; }
+.insights li { margin: 5px 0; }
+.insights p { font-size: 12.5px; color: var(--text-2); margin-top: 10px; }
+details { margin-top: 12px; }
+summary { cursor: pointer; font-size: 13.5px; font-weight: 600; padding: 4px 0; }
+table { width: 100%; border-collapse: collapse; font-size: 13px; margin-top: 8px; font-variant-numeric: tabular-nums; }
+th, td { text-align: left; padding: 7px 10px; border-bottom: 1px solid var(--hair); }
+th { color: var(--text-2); font-weight: 600; font-size: 12px; }
+td.n, th.n { text-align: right; }
+.tablewrap { overflow-x: auto; }
+footer { margin-top: 18px; font-size: 12px; color: var(--text-3); }
+#tip {
+  position: fixed; pointer-events: none; z-index: 10; display: none;
+  background: var(--surface); color: var(--text); border: 1px solid var(--hair);
+  border-radius: 8px; padding: 8px 10px; font-size: 12.5px; box-shadow: 0 4px 16px rgba(0,0,0,.12);
+  min-width: 150px;
+}
+#tip .big { font-size: 16px; font-weight: 650; }
+#tip .m { color: var(--text-2); }
+@media (max-width: 480px) {
+  .row { grid-template-columns: 92px 1fr 48px; }
+  .kpi-value { font-size: 26px; }
+}
+</style>
+</head>
+<body>
+<div class="wrap"><p><a href="../index.html#project=churn">Вернуться к кейсу</a></p>
+  <h1>Отток клиентов банка</h1>
+  <p class="sub">Учебный пример дашборда по открытому набору Churn for Bank Customers (10 000 клиентов европейского банка, источник — Kaggle). Фильтры меняют все показатели ниже.</p>
+
+  <div class="filters" role="group" aria-label="Фильтры">
+    <div><label for="f-geo">Страна</label><select id="f-geo"></select></div>
+    <div><label for="f-gender">Пол</label><select id="f-gender"></select></div>
+    <div><label for="f-active">Активность</label><select id="f-active"></select></div>
+    <div><label for="f-age">Возраст</label><select id="f-age"></select></div>
+    <button id="reset" type="button">Сбросить</button>
+  </div>
+
+  <section class="kpis" aria-label="Ключевые показатели">
+    <div class="card"><div class="kpi-label">Клиентов в выборке</div><div class="kpi-value" id="k-n">—</div><div class="kpi-note" id="k-n2"></div></div>
+    <div class="card"><div class="kpi-label">Ушли из банка</div><div class="kpi-value" id="k-x">—</div><div class="kpi-note" id="k-x2"></div></div>
+    <div class="card"><div class="kpi-label">Доля оттока</div><div class="kpi-value" id="k-r">—</div><div class="kpi-note" id="k-r2"></div></div>
+  </section>
+
+  <section class="panels" id="panels" aria-label="Отток по группам"></section>
+
+  <section class="card insights" id="insights" aria-label="Выводы"></section>
+
+  <details class="card">
+    <summary>Показать данные таблицей</summary>
+    <div class="tablewrap"><table id="tbl"></table></div>
+  </details>
+
+  <footer>Данные: Churn for Bank Customers (Kaggle), строк в исходном файле — 10 000. «Отток» = доля клиентов, у которых Exited = 1. Шкала у каждого графика своя: сравнивайте столбики внутри одного графика. Это учебный пример, цифры взяты из набора данных.</footer>
+</div>
+<div id="tip" role="tooltip"></div>
+
+<script>
+const CELLS = [{"geo":"France","gender":"Female","active":0,"prod":1,"age":"31–40","n":252,"x":55},{"geo":"France","gender":"Female","active":0,"prod":1,"age":"41–50","n":136,"x":67},{"geo":"France","gender":"Female","active":0,"prod":1,"age":"51–60","n":54,"x":51},{"geo":"France","gender":"Female","active":0,"prod":1,"age":"60+","n":16,"x":14},{"geo":"France","gender":"Female","active":0,"prod":1,"age":"до 30","n":90,"x":12},{"geo":"France","gender":"Female","active":0,"prod":2,"age":"31–40","n":260,"x":19},{"geo":"France","gender":"Female","active":0,"prod":2,"age":"41–50","n":100,"x":16},{"geo":"France","gender":"Female","active":0,"prod":2,"age":"51–60","n":13,"x":8},{"geo":"France","gender":"Female","active":0,"prod":2,"age":"60+","n":4,"x":4},{"geo":"France","gender":"Female","active":0,"prod":2,"age":"до 30","n":131,"x":2},{"geo":"France","gender":"Female","active":0,"prod":3,"age":"31–40","n":6,"x":6},{"geo":"France","gender":"Female","active":0,"prod":3,"age":"41–50","n":16,"x":15},{"geo":"France","gender":"Female","active":0,"prod":3,"age":"51–60","n":5,"x":5},{"geo":"France","gender":"Female","active":0,"prod":3,"age":"60+","n":3,"x":3},{"geo":"France","gender":"Female","active":0,"prod":3,"age":"до 30","n":6,"x":4},{"geo":"France","gender":"Female","active":0,"prod":4,"age":"31–40","n":2,"x":2},{"geo":"France","gender":"Female","active":0,"prod":4,"age":"41–50","n":4,"x":4},{"geo":"France","gender":"Female","active":0,"prod":4,"age":"51–60","n":1,"x":1},{"geo":"France","gender":"Female","active":1,"prod":1,"age":"31–40","n":250,"x":33},{"geo":"France","gender":"Female","active":1,"prod":1,"age":"41–50","n":118,"x":41},{"geo":"France","gender":"Female","active":1,"prod":1,"age":"51–60","n":55,"x":28},{"geo":"France","gender":"Female","active":1,"prod":1,"age":"60+","n":43,"x":4},{"geo":"France","gender":"Female","active":1,"prod":1,"age":"до 30","n":102,"x":6},{"geo":"France","gender":"Female","active":1,"prod":2,"age":"31–40","n":241,"x":10},{"geo":"France","gender":"Female","active":1,"prod":2,"age":"41–50","n":115,"x":11},{"geo":"France","gender":"Female","active":1,"prod":2,"age":"51–60","n":34,"x":8},{"geo":"France","gender":"Female","active":1,"prod":2,"age":"60+","n":41,"x":0},{"geo":"France","gender":"Female","active":1,"prod":2,"age":"до 30","n":132,"x":4},{"geo":"France","gender":"Female","active":1,"prod":3,"age":"31–40","n":4,"x":2},{"geo":"France","gender":"Female","active":1,"prod":3,"age":"41–50","n":7,"x":7},{"geo":"France","gender":"Female","active":1,"prod":3,"age":"51–60","n":5,"x":5},{"geo":"France","gender":"Female","active":1,"prod":3,"age":"60+","n":2,"x":1},{"geo":"France","gender":"Female","active":1,"prod":3,"age":"до 30","n":1,"x":0},{"geo":"France","gender":"Female","active":1,"prod":4,"age":"31–40","n":3,"x":3},{"geo":"France","gender":"Female","active":1,"prod":4,"age":"41–50","n":3,"x":3},{"geo":"France","gender":"Female","active":1,"prod":4,"age":"51–60","n":4,"x":4},{"geo":"France","gender":"Female","active":1,"prod":4,"age":"60+","n":2,"x":2},{"geo":"France","gender":"Male","active":0,"prod":1,"age":"31–40","n":331,"x":38},{"geo":"France","gender":"Male","active":0,"prod":1,"age":"41–50","n":165,"x":68},{"geo":"France","gender":"Male","active":0,"prod":1,"age":"51–60","n":57,"x":46},{"geo":"France","gender":"Male","active":0,"prod":1,"age":"60+","n":8,"x":8},{"geo":"France","gender":"Male","active":0,"prod":1,"age":"до 30","n":144,"x":12},{"geo":"France","gender":"Male","active":0,"prod":2,"age":"31–40","n":318,"x":12},{"geo":"France","gender":"Male","active":0,"prod":2,"age":"41–50","n":118,"x":8},{"geo":"France","gender":"Male","active":0,"prod":2,"age":"51–60","n":9,"x":5},{"geo":"France","gender":"Male","active":0,"prod":2,"age":"60+","n":6,"x":2},{"geo":"France","gender":"Male","active":0,"prod":2,"age":"до 30","n":139,"x":1},{"geo":"France","gender":"Male","active":0,"prod":3,"age":"31–40","n":10,"x":7},{"geo":"France","gender":"Male","active":0,"prod":3,"age":"41–50","n":10,"x":8},{"geo":"France","gender":"Male","active":0,"prod":3,"age":"51–60","n":3,"x":3},{"geo":"France","gender":"Male","active":0,"prod":3,"age":"60+","n":1,"x":1},{"geo":"France","gender":"Male","active":0,"prod":4,"age":"31–40","n":1,"x":1},{"geo":"France","gender":"Male","active":0,"prod":4,"age":"41–50","n":4,"x":4},{"geo":"France","gender":"Male","active":1,"prod":1,"age":"31–40","n":305,"x":24},{"geo":"France","gender":"Male","active":1,"prod":1,"age":"41–50","n":137,"x":30},{"geo":"France","gender":"Male","active":1,"prod":1,"age":"51–60","n":67,"x":19},{"geo":"France","gender":"Male","active":1,"prod":1,"age":"60+","n":49,"x":3},{"geo":"France","gender":"Male","active":1,"prod":1,"age":"до 30","n":135,"x":5},{"geo":"France","gender":"Male","active":1,"prod":2,"age":"31–40","n":321,"x":4},{"geo":"France","gender":"Male","active":1,"prod":2,"age":"41–50","n":125,"x":9},{"geo":"France","gender":"Male","active":1,"prod":2,"age":"51–60","n":53,"x":4},{"geo":"France","gender":"Male","active":1,"prod":2,"age":"60+","n":53,"x":4},{"geo":"France","gender":"Male","active":1,"prod":2,"age":"до 30","n":154,"x":4},{"geo":"France","gender":"Male","active":1,"prod":3,"age":"31–40","n":6,"x":3},{"geo":"France","gender":"Male","active":1,"prod":3,"age":"41–50","n":6,"x":6},{"geo":"France","gender":"Male","active":1,"prod":3,"age":"51–60","n":6,"x":5},{"geo":"France","gender":"Male","active":1,"prod":3,"age":"60+","n":3,"x":0},{"geo":"France","gender":"Male","active":1,"prod":3,"age":"до 30","n":4,"x":1},{"geo":"France","gender":"Male","active":1,"prod":4,"age":"31–40","n":1,"x":1},{"geo":"France","gender":"Male","active":1,"prod":4,"age":"41–50","n":3,"x":3},{"geo":"France","gender":"Male","active":1,"prod":4,"age":"51–60","n":1,"x":1},{"geo":"Germany","gender":"Female","active":0,"prod":1,"age":"31–40","n":132,"x":46},{"geo":"Germany","gender":"Female","active":0,"prod":1,"age":"41–50","n":122,"x":87},{"geo":"Germany","gender":"Female","active":0,"prod":1,"age":"51–60","n":48,"x":42},{"geo":"Germany","gender":"Female","active":0,"prod":1,"age":"60+","n":13,"x":11},{"geo":"Germany","gender":"Female","active":0,"prod":1,"age":"до 30","n":58,"x":18},{"geo":"Germany","gender":"Female","active":0,"prod":2,"age":"31–40","n":99,"x":15},{"geo":"Germany","gender":"Female","active":0,"prod":2,"age":"41–50","n":61,"x":12},{"geo":"Germany","gender":"Female","active":0,"prod":2,"age":"51–60","n":11,"x":10},{"geo":"Germany","gender":"Female","active":0,"prod":2,"age":"60+","n":3,"x":2},{"geo":"Germany","gender":"Female","active":0,"prod":2,"age":"до 30","n":48,"x":3},{"geo":"Germany","gender":"Female","active":0,"prod":3,"age":"31–40","n":8,"x":8},{"geo":"Germany","gender":"Female","active":0,"prod":3,"age":"41–50","n":9,"x":8},{"geo":"Germany","gender":"Female","active":0,"prod":3,"age":"51–60","n":7,"x":7},{"geo":"Germany","gender":"Female","active":0,"prod":3,"age":"60+","n":3,"x":3},{"geo":"Germany","gender":"Female","active":0,"prod":3,"age":"до 30","n":2,"x":1},{"geo":"Germany","gender":"Female","active":0,"prod":4,"age":"31–40","n":2,"x":2},{"geo":"Germany","gender":"Female","active":0,"prod":4,"age":"41–50","n":4,"x":4},{"geo":"Germany","gender":"Female","active":0,"prod":4,"age":"51–60","n":3,"x":3},{"geo":"Germany","gender":"Female","active":0,"prod":4,"age":"до 30","n":1,"x":1},{"geo":"Germany","gender":"Female","active":1,"prod":1,"age":"31–40","n":115,"x":33},{"geo":"Germany","gender":"Female","active":1,"prod":1,"age":"41–50","n":69,"x":39},{"geo":"Germany","gender":"Female","active":1,"prod":1,"age":"51–60","n":37,"x":22},{"geo":"Germany","gender":"Female","active":1,"prod":1,"age":"60+","n":16,"x":7},{"geo":"Germany","gender":"Female","active":1,"prod":1,"age":"до 30","n":54,"x":8},{"geo":"Germany","gender":"Female","active":1,"prod":2,"age":"31–40","n":106,"x":8},{"geo":"Germany","gender":"Female","active":1,"prod":2,"age":"41–50","n":56,"x":15},{"geo":"Germany","gender":"Female","active":1,"prod":2,"age":"51–60","n":19,"x":7},{"geo":"Germany","gender":"Female","active":1,"prod":2,"age":"60+","n":17,"x":3},{"geo":"Germany","gender":"Female","active":1,"prod":2,"age":"до 30","n":42,"x":0},{"geo":"Germany","gender":"Female","active":1,"prod":3,"age":"31–40","n":8,"x":5},{"geo":"Germany","gender":"Female","active":1,"prod":3,"age":"41–50","n":9,"x":8},{"geo":"Germany","gender":"Female","active":1,"prod":3,"age":"51–60","n":3,"x":3},{"geo":"Germany","gender":"Female","active":1,"prod":3,"age":"60+","n":1,"x":1},{"geo":"Germany","gender":"Female","active":1,"prod":3,"age":"до 30","n":3,"x":2},{"geo":"Germany","gender":"Female","active":1,"prod":4,"age":"31–40","n":3,"x":3},{"geo":"Germany","gender":"Female","active":1,"prod":4,"age":"51–60","n":1,"x":1},{"geo":"Germany","gender":"Male","active":0,"prod":1,"age":"31–40","n":128,"x":38},{"geo":"Germany","gender":"Male","active":0,"prod":1,"age":"41–50","n":111,"x":74},{"geo":"Germany","gender":"Male","active":0,"prod":1,"age":"51–60","n":42,"x":40},{"geo":"Germany","gender":"Male","active":0,"prod":1,"age":"60+","n":9,"x":6},{"geo":"Germany","gender":"Male","active":0,"prod":1,"age":"до 30","n":57,"x":13},{"geo":"Germany","gender":"Male","active":0,"prod":2,"age":"31–40","n":127,"x":10},{"geo":"Germany","gender":"Male","active":0,"prod":2,"age":"41–50","n":53,"x":13},{"geo":"Germany","gender":"Male","active":0,"prod":2,"age":"51–60","n":14,"x":8},{"geo":"Germany","gender":"Male","active":0,"prod":2,"age":"60+","n":1,"x":1},{"geo":"Germany","gender":"Male","active":0,"prod":2,"age":"до 30","n":55,"x":4},{"geo":"Germany","gender":"Male","active":0,"prod":3,"age":"31–40","n":11,"x":10},{"geo":"Germany","gender":"Male","active":0,"prod":3,"age":"41–50","n":7,"x":6},{"geo":"Germany","gender":"Male","active":0,"prod":3,"age":"51–60","n":5,"x":5},{"geo":"Germany","gender":"Male","active":0,"prod":3,"age":"60+","n":2,"x":2},{"geo":"Germany","gender":"Male","active":0,"prod":3,"age":"до 30","n":1,"x":1},{"geo":"Germany","gender":"Male","active":0,"prod":4,"age":"41–50","n":3,"x":3},{"geo":"Germany","gender":"Male","active":0,"prod":4,"age":"51–60","n":1,"x":1},{"geo":"Germany","gender":"Male","active":1,"prod":1,"age":"31–40","n":127,"x":27},{"geo":"Germany","gender":"Male","active":1,"prod":1,"age":"41–50","n":85,"x":41},{"geo":"Germany","gender":"Male","active":1,"prod":1,"age":"51–60","n":33,"x":17},{"geo":"Germany","gender":"Male","active":1,"prod":1,"age":"60+","n":28,"x":7},{"geo":"Germany","gender":"Male","active":1,"prod":1,"age":"до 30","n":65,"x":2},{"geo":"Germany","gender":"Male","active":1,"prod":2,"age":"31–40","n":150,"x":4},{"geo":"Germany","gender":"Male","active":1,"prod":2,"age":"41–50","n":75,"x":7},{"geo":"Germany","gender":"Male","active":1,"prod":2,"age":"51–60","n":17,"x":1},{"geo":"Germany","gender":"Male","active":1,"prod":2,"age":"60+","n":20,"x":1},{"geo":"Germany","gender":"Male","active":1,"prod":2,"age":"до 30","n":66,"x":2},{"geo":"Germany","gender":"Male","active":1,"prod":3,"age":"31–40","n":5,"x":4},{"geo":"Germany","gender":"Male","active":1,"prod":3,"age":"41–50","n":9,"x":9},{"geo":"Germany","gender":"Male","active":1,"prod":3,"age":"51–60","n":2,"x":2},{"geo":"Germany","gender":"Male","active":1,"prod":3,"age":"до 30","n":1,"x":1},{"geo":"Germany","gender":"Male","active":1,"prod":4,"age":"31–40","n":1,"x":1},{"geo":"Germany","gender":"Male","active":1,"prod":4,"age":"41–50","n":5,"x":5},{"geo":"Spain","gender":"Female","active":0,"prod":1,"age":"31–40","n":104,"x":28},{"geo":"Spain","gender":"Female","active":0,"prod":1,"age":"41–50","n":77,"x":41},{"geo":"Spain","gender":"Female","active":0,"prod":1,"age":"51–60","n":20,"x":18},{"geo":"Spain","gender":"Female","active":0,"prod":1,"age":"60+","n":3,"x":2},{"geo":"Spain","gender":"Female","active":0,"prod":1,"age":"до 30","n":36,"x":7},{"geo":"Spain","gender":"Female","active":0,"prod":2,"age":"31–40","n":131,"x":5},{"geo":"Spain","gender":"Female","active":0,"prod":2,"age":"41–50","n":57,"x":13},{"geo":"Spain","gender":"Female","active":0,"prod":2,"age":"51–60","n":11,"x":9},{"geo":"Spain","gender":"Female","active":0,"prod":2,"age":"60+","n":2,"x":2},{"geo":"Spain","gender":"Female","active":0,"prod":2,"age":"до 30","n":56,"x":4},{"geo":"Spain","gender":"Female","active":0,"prod":3,"age":"31–40","n":7,"x":3},{"geo":"Spain","gender":"Female","active":0,"prod":3,"age":"41–50","n":9,"x":9},{"geo":"Spain","gender":"Female","active":0,"prod":3,"age":"51–60","n":6,"x":6},{"geo":"Spain","gender":"Female","active":0,"prod":3,"age":"до 30","n":4,"x":4},{"geo":"Spain","gender":"Female","active":0,"prod":4,"age":"41–50","n":2,"x":2},{"geo":"Spain","gender":"Female","active":0,"prod":4,"age":"51–60","n":1,"x":1},{"geo":"Spain","gender":"Female","active":1,"prod":1,"age":"31–40","n":110,"x":11},{"geo":"Spain","gender":"Female","active":1,"prod":1,"age":"41–50","n":61,"x":11},{"geo":"Spain","gender":"Female","active":1,"prod":1,"age":"51–60","n":27,"x":11},{"geo":"Spain","gender":"Female","active":1,"prod":1,"age":"60+","n":25,"x":3},{"geo":"Spain","gender":"Female","active":1,"prod":1,"age":"до 30","n":53,"x":6},{"geo":"Spain","gender":"Female","active":1,"prod":2,"age":"31–40","n":112,"x":6},{"geo":"Spain","gender":"Female","active":1,"prod":2,"age":"41–50","n":58,"x":8},{"geo":"Spain","gender":"Female","active":1,"prod":2,"age":"51–60","n":24,"x":3},{"geo":"Spain","gender":"Female","active":1,"prod":2,"age":"60+","n":18,"x":1},{"geo":"Spain","gender":"Female","active":1,"prod":2,"age":"до 30","n":58,"x":2},{"geo":"Spain","gender":"Female","active":1,"prod":3,"age":"31–40","n":3,"x":1},{"geo":"Spain","gender":"Female","active":1,"prod":3,"age":"41–50","n":6,"x":6},{"geo":"Spain","gender":"Female","active":1,"prod":3,"age":"51–60","n":2,"x":2},{"geo":"Spain","gender":"Female","active":1,"prod":3,"age":"60+","n":1,"x":1},{"geo":"Spain","gender":"Female","active":1,"prod":3,"age":"до 30","n":3,"x":3},{"geo":"Spain","gender":"Female","active":1,"prod":4,"age":"31–40","n":1,"x":1},{"geo":"Spain","gender":"Female","active":1,"prod":4,"age":"41–50","n":1,"x":1},{"geo":"Spain","gender":"Male","active":0,"prod":1,"age":"31–40","n":152,"x":20},{"geo":"Spain","gender":"Male","active":0,"prod":1,"age":"41–50","n":85,"x":37},{"geo":"Spain","gender":"Male","active":0,"prod":1,"age":"51–60","n":16,"x":13},{"geo":"Spain","gender":"Male","active":0,"prod":1,"age":"60+","n":7,"x":6},{"geo":"Spain","gender":"Male","active":0,"prod":1,"age":"до 30","n":48,"x":6},{"geo":"Spain","gender":"Male","active":0,"prod":2,"age":"31–40","n":153,"x":7},{"geo":"Spain","gender":"Male","active":0,"prod":2,"age":"41–50","n":70,"x":8},{"geo":"Spain","gender":"Male","active":0,"prod":2,"age":"51–60","n":6,"x":3},{"geo":"Spain","gender":"Male","active":0,"prod":2,"age":"60+","n":7,"x":5},{"geo":"Spain","gender":"Male","active":0,"prod":2,"age":"до 30","n":81,"x":1},{"geo":"Spain","gender":"Male","active":0,"prod":3,"age":"31–40","n":2,"x":2},{"geo":"Spain","gender":"Male","active":0,"prod":3,"age":"41–50","n":3,"x":3},{"geo":"Spain","gender":"Male","active":0,"prod":3,"age":"51–60","n":2,"x":2},{"geo":"Spain","gender":"Male","active":0,"prod":3,"age":"60+","n":1,"x":1},{"geo":"Spain","gender":"Male","active":0,"prod":3,"age":"до 30","n":4,"x":2},{"geo":"Spain","gender":"Male","active":0,"prod":4,"age":"51–60","n":1,"x":1},{"geo":"Spain","gender":"Male","active":0,"prod":4,"age":"до 30","n":1,"x":1},{"geo":"Spain","gender":"Male","active":1,"prod":1,"age":"31–40","n":172,"x":14},{"geo":"Spain","gender":"Male","active":1,"prod":1,"age":"41–50","n":81,"x":13},{"geo":"Spain","gender":"Male","active":1,"prod":1,"age":"51–60","n":44,"x":12},{"geo":"Spain","gender":"Male","active":1,"prod":1,"age":"60+","n":32,"x":4},{"geo":"Spain","gender":"Male","active":1,"prod":1,"age":"до 30","n":68,"x":4},{"geo":"Spain","gender":"Male","active":1,"prod":2,"age":"31–40","n":164,"x":2},{"geo":"Spain","gender":"Male","active":1,"prod":2,"age":"41–50","n":62,"x":3},{"geo":"Spain","gender":"Male","active":1,"prod":2,"age":"51–60","n":26,"x":4},{"geo":"Spain","gender":"Male","active":1,"prod":2,"age":"60+","n":24,"x":0},{"geo":"Spain","gender":"Male","active":1,"prod":2,"age":"до 30","n":63,"x":1},{"geo":"Spain","gender":"Male","active":1,"prod":3,"age":"31–40","n":7,"x":4},{"geo":"Spain","gender":"Male","active":1,"prod":3,"age":"41–50","n":3,"x":2},{"geo":"Spain","gender":"Male","active":1,"prod":3,"age":"51–60","n":1,"x":1},{"geo":"Spain","gender":"Male","active":1,"prod":3,"age":"до 30","n":2,"x":0}];
+
+const DIMS = [
+  { key: 'geo', title: 'Страна', hint: 'Доля ушедших клиентов по странам', order: ['France','Germany','Spain'],
+    name: { France: 'Франция', Germany: 'Германия', Spain: 'Испания' } },
+  { key: 'age', title: 'Возраст', hint: 'Доля ушедших клиентов по возрастным группам', order: ['до 30','31–40','41–50','51–60','60+'],
+    name: { 'до 30': 'до 30 лет', '31–40': '31–40 лет', '41–50': '41–50 лет', '51–60': '51–60 лет', '60+': 'старше 60' } },
+  { key: 'prod', title: 'Количество продуктов', hint: 'Сколько продуктов банка у клиента', order: [1,2,3,4],
+    name: { 1: '1 продукт', 2: '2 продукта', 3: '3 продукта', 4: '4 продукта' } },
+  { key: 'active', title: 'Активность клиента', hint: 'Пользуется ли клиент продуктами банка', order: [1,0],
+    name: { 1: 'Активные', 0: 'Неактивные' } },
+  { key: 'gender', title: 'Пол', hint: 'Доля ушедших клиентов по полу', order: ['Female','Male'],
+    name: { Female: 'Женщины', Male: 'Мужчины' } }
+];
+
+const FILTERS = [
+  { id: 'f-geo', dim: DIMS[0], all: 'Все страны' },
+  { id: 'f-gender', dim: DIMS[4], all: 'Все' },
+  { id: 'f-active', dim: DIMS[3], all: 'Все' },
+  { id: 'f-age', dim: DIMS[1], all: 'Все возрасты' }
+];
+
+const fmtInt = n => n.toLocaleString('ru-RU');
+const fmtPct = r => (r * 100).toFixed(1).replace('.', ',') + '%';
+const fmtPP = d => (d >= 0 ? '+' : '−') + Math.abs(d * 100).toFixed(1).replace('.', ',') + ' п.п.';
+
+const tot = rows => rows.reduce((a, c) => ({ n: a.n + c.n, x: a.x + c.x }), { n: 0, x: 0 });
+const BASE = tot(CELLS);
+const BASE_RATE = BASE.x / BASE.n;
+
+const tip = document.getElementById('tip');
+function showTip(e, el) {
+  tip.replaceChildren();
+  const big = document.createElement('div'); big.className = 'big'; big.textContent = el.dataset.rate;
+  const g = document.createElement('div'); g.textContent = el.dataset.group;
+  const m = document.createElement('div'); m.className = 'm';
+  m.textContent = 'Клиентов: ' + el.dataset.n + ', ушли: ' + el.dataset.x;
+  tip.append(big, g, m);
+  tip.style.display = 'block';
+  moveTip(e, el);
+}
+function moveTip(e, el) {
+  let x, y;
+  if (e && e.clientX !== undefined) { x = e.clientX + 14; y = e.clientY + 14; }
+  else { const r = el.getBoundingClientRect(); x = r.left + 12; y = r.bottom + 6; }
+  const w = tip.offsetWidth, h = tip.offsetHeight;
+  if (x + w > innerWidth - 8) x = innerWidth - w - 8;
+  if (y + h > innerHeight - 8) y = y - h - 28;
+  tip.style.left = Math.max(8, x) + 'px'; tip.style.top = Math.max(8, y) + 'px';
+}
+function hideTip() { tip.style.display = 'none'; }
+
+function setupFilters() {
+  FILTERS.forEach(f => {
+    const sel = document.getElementById(f.id);
+    const o = document.createElement('option'); o.value = 'all'; o.textContent = f.all; sel.appendChild(o);
+    f.dim.order.forEach(v => {
+      const op = document.createElement('option'); op.value = String(v); op.textContent = f.dim.name[v]; sel.appendChild(op);
+    });
+    sel.addEventListener('change', render);
+  });
+  document.getElementById('reset').addEventListener('click', () => {
+    FILTERS.forEach(f => document.getElementById(f.id).value = 'all'); render();
+  });
+}
+
+function currentRows() {
+  const sel = {};
+  FILTERS.forEach(f => { sel[f.dim.key] = document.getElementById(f.id).value; });
+  return CELLS.filter(c => FILTERS.every(f => sel[f.dim.key] === 'all' || String(c[f.dim.key]) === sel[f.dim.key]));
+}
+
+function groupBy(rows, dim) {
+  return dim.order.map(v => {
+    const t = tot(rows.filter(c => c[dim.key] === v));
+    return { v, label: dim.name[v], n: t.n, x: t.x, rate: t.n ? t.x / t.n : 0 };
+  });
+}
+
+function renderKpis(rows) {
+  const t = tot(rows);
+  document.getElementById('k-n').textContent = fmtInt(t.n);
+  document.getElementById('k-n2').textContent = 'Из ' + fmtInt(BASE.n) + ' во всей базе (' + ((t.n / BASE.n) * 100).toFixed(1).replace('.', ',') + '%)';
+  document.getElementById('k-x').textContent = fmtInt(t.x);
+  document.getElementById('k-x2').textContent = 'Из них ушли ' + fmtInt(t.x) + ' клиентов';
+  const r = t.n ? t.x / t.n : 0;
+  document.getElementById('k-r').textContent = t.n ? fmtPct(r) : '—';
+  const note = document.getElementById('k-r2');
+  note.replaceChildren();
+  if (t.n) {
+    const d = r - BASE_RATE;
+    if (Math.abs(d) < 0.0005) {
+      note.textContent = 'Совпадает со средним по базе (' + fmtPct(BASE_RATE) + ')';
+    } else {
+      const b = document.createElement('b'); b.textContent = fmtPP(d);
+      note.append(b, document.createTextNode(' к среднему по базе (' + fmtPct(BASE_RATE) + ')'));
+    }
+  }
+}
+
+function renderPanels(rows) {
+  const host = document.getElementById('panels');
+  host.replaceChildren();
+  const t = tot(rows);
+  const avg = t.n ? t.x / t.n : 0;
+  DIMS.forEach(dim => {
+    const data = groupBy(rows, dim).filter(g => g.n > 0);
+    const card = document.createElement('div'); card.className = 'card panel';
+    const h = document.createElement('h2'); h.textContent = dim.title;
+    const hint = document.createElement('div'); hint.className = 'hint'; hint.textContent = dim.hint;
+    card.append(h, hint);
+    if (!data.length) {
+      const e = document.createElement('div'); e.className = 'empty'; e.textContent = 'В выбранном срезе нет клиентов.';
+      card.append(e); host.appendChild(card); return;
+    }
+    const scale = Math.max(0.05, Math.max(...data.map(g => g.rate), avg) * 1.1);
+    const rowsEl = document.createElement('div'); rowsEl.className = 'rows';
+    data.forEach(g => {
+      const row = document.createElement('div'); row.className = 'row';
+      const name = document.createElement('div'); name.className = 'name';
+      name.textContent = g.label;
+      const small = document.createElement('small'); small.textContent = fmtInt(g.n) + ' кл.'; name.appendChild(small);
+      const track = document.createElement('div'); track.className = 'track';
+      const bar = document.createElement('div'); bar.className = 'bar'; bar.tabIndex = 0;
+      bar.style.width = (g.rate / scale * 100) + '%';
+      bar.dataset.rate = fmtPct(g.rate); bar.dataset.group = dim.title + ': ' + g.label;
+      bar.dataset.n = fmtInt(g.n); bar.dataset.x = fmtInt(g.x);
+      bar.setAttribute('aria-label', dim.title + ', ' + g.label + ': отток ' + fmtPct(g.rate) + ', клиентов ' + fmtInt(g.n));
+      bar.addEventListener('pointerenter', e => showTip(e, bar));
+      bar.addEventListener('pointermove', e => moveTip(e, bar));
+      bar.addEventListener('pointerleave', hideTip);
+      bar.addEventListener('focus', () => showTip(null, bar));
+      bar.addEventListener('blur', hideTip);
+      track.appendChild(bar);
+      const line = document.createElement('div'); line.className = 'avg'; line.style.left = (avg / scale * 100) + '%';
+      track.appendChild(line);
+      const val = document.createElement('div'); val.className = 'val'; val.textContent = fmtPct(g.rate);
+      row.append(name, track, val);
+      rowsEl.appendChild(row);
+    });
+    card.appendChild(rowsEl);
+    const lg = document.createElement('div'); lg.className = 'legend';
+    const sw = document.createElement('i'); lg.appendChild(sw);
+    lg.appendChild(document.createTextNode('Средний отток в выборке: ' + fmtPct(avg)));
+    card.appendChild(lg);
+    host.appendChild(card);
+  });
+}
+
+function renderTable(rows) {
+  const t = document.getElementById('tbl');
+  t.replaceChildren();
+  const thead = document.createElement('thead'); const hr = document.createElement('tr');
+  [['Показатель', ''], ['Группа', ''], ['Клиентов', 'n'], ['Ушли', 'n'], ['Отток', 'n']].forEach(([txt, cls]) => {
+    const th = document.createElement('th'); th.textContent = txt; if (cls) th.className = cls; hr.appendChild(th);
+  });
+  thead.appendChild(hr); t.appendChild(thead);
+  const tb = document.createElement('tbody');
+  DIMS.forEach(dim => {
+    groupBy(rows, dim).filter(g => g.n > 0).forEach(g => {
+      const tr = document.createElement('tr');
+      [dim.title, g.label, fmtInt(g.n), fmtInt(g.x), fmtPct(g.rate)].forEach((txt, i) => {
+        const td = document.createElement('td'); td.textContent = txt; if (i >= 2) td.className = 'n'; tr.appendChild(td);
+      });
+      tb.appendChild(tr);
+    });
+  });
+  t.appendChild(tb);
+}
+
+function renderInsights() {
+  const host = document.getElementById('insights');
+  host.replaceChildren();
+  const h = document.createElement('h2'); h.textContent = 'Что видно по всей базе';
+  const ul = document.createElement('ul');
+  const add = txt => { const li = document.createElement('li'); li.textContent = txt; ul.appendChild(li); };
+  const g = k => groupBy(CELLS, DIMS.find(d => d.key === k));
+  const top = (arr, minN) => arr.filter(x => x.n >= minN).sort((a, b) => b.rate - a.rate)[0];
+  const age = top(g('age'), 200), geo = top(g('geo'), 200), act = g('active');
+  const prod = g('prod'), p2 = prod.find(x => x.v === 2), p34 = tot(CELLS.filter(c => c.prod >= 3));
+  add('Возраст сильнее всего связан с уходом: в группе ' + age.label + ' ушли ' + fmtPct(age.rate) + ' клиентов, это в ' + (age.rate / BASE_RATE).toFixed(1).replace('.', ',') + ' раза выше среднего (' + fmtPct(BASE_RATE) + ').');
+  add('Среди стран выделяется ' + geo.label + ': отток ' + fmtPct(geo.rate) + ' против ' + fmtPct(g('geo').filter(x => x.v !== geo.v).reduce((a, x) => a + x.x, 0) / g('geo').filter(x => x.v !== geo.v).reduce((a, x) => a + x.n, 0)) + ' в остальных двух странах вместе.');
+  add('Неактивные клиенты уходят почти вдвое чаще активных: ' + fmtPct(act.find(x => x.v === 0).rate) + ' против ' + fmtPct(act.find(x => x.v === 1).rate) + '.');
+  add('У клиентов с двумя продуктами отток самый низкий (' + fmtPct(p2.rate) + '), а у клиентов с 3–4 продуктами уходят ' + fmtPct(p34.x / p34.n) + ' (' + fmtInt(p34.n) + ' клиентов, группа небольшая).');
+  const p = document.createElement('p');
+  p.textContent = 'Гипотезы для следующего шага (их нужно проверять, а не принимать на веру): почему клиенты 41–60 лет уходят чаще, что не так с предложением в Германии, и не навязывают ли банку третий и четвёртый продукт.';
+  host.append(h, ul, p);
+}
+
+function render() {
+  const rows = currentRows();
+  renderKpis(rows); renderPanels(rows); renderTable(rows);
+}
+
+setupFilters();
+renderInsights();
+render();
+</script>
+</body>
+</html>

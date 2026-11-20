@@ -1,4 +1,4 @@
-import {projects} from './projects.js?v=20261118-redstudy';
+import {projects} from './projects.js?v=evidence1';
 
 for(const [id,count] of [
  ['stat-projects',projects.length],
