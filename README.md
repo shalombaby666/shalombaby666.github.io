@@ -1,4 +1,4 @@
-<a href="https://shalombaby666.github.io/"><img src="assets/profile-banner.png" alt="Денис — данные и системы" width="1200"></a>
+<a href="https://shalombaby666.github.io/"><img src="assets/profile-banner.png?v=redstudy1" alt="Денис — данные и системы" width="1200"></a>
 
 ### Привет, я Денис
 
