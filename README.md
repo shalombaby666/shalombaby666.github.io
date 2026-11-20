@@ -6,7 +6,7 @@
 
 Работаю с SQL, Python/pandas и Яндекс DataLens. Также использую Java, C#, HTML и CSS. В учебных работах — R, dplyr и ggplot2.
 
-[Портфолио](https://shalombaby666.github.io/) · [Резюме PDF](https://shalombaby666.github.io/denis-resume.pdf) · [Telegram @shalombaby777](https://t.me/shalombaby777)
+[Портфолио](https://shalombaby666.github.io/) · [Резюме PDF](https://shalombaby666.github.io/denis-resume.pdf) · [Форматы печати](https://shalombaby666.github.io/print.html) · [Telegram @shalombaby777](https://t.me/shalombaby777)
 
 ### Основные проекты
 

@@ -1,5 +1,5 @@
-import {projects} from './projects.js?v=evidence1';
-import {renderQuest} from './quests.js?v=evidence1';
+import {projects} from './projects.js?v=navprint1';
+import {renderCase} from './case-view.js?v=navprint1';
 import {createFleet,shoot} from './battleship.js';
 const $=s=>document.querySelector(s);
 const symbols={sandfox:'░▒▓',two:'P1 P2',starman:'✦',snow:'❄',alfa:'→',repair:'m²',quality:'∑',bridge:'↔',sprouts:'♧',geo:'N E',minprav:'А Я'};
@@ -16,11 +16,24 @@ function render(){
 }
 $('#filters').innerHTML=['Все','Игры','Хакатоны','Данные','Автоматизация','Интерактив','Roblox'].map(c=>`<button data-filter="${c}" aria-pressed="${c==='Все'}">${c}</button>`).join('');
 $('#filters').onclick=e=>{const b=e.target.closest('[data-filter]');if(!b)return;category=b.dataset.filter;$('#filters').querySelectorAll('button').forEach(x=>x.setAttribute('aria-pressed',String(x===b)));render();};$('#search').oninput=render;$('#project-more').onclick=()=>{showAllProjects=!showAllProjects;render();};render();
-const dialog=$('#case-dialog');
-function openCase(id){const p=projects.find(p=>p.id===id);if(!p)return;if(!renderQuest({...p,category:p.type})){const demo=p.url?`<a class="button" href="${p.url}" target="_blank" rel="noopener">${p.url.startsWith('reports.html')?'Открыть материалы':p.status==='Демо'?'Открыть демо':'Оригинальный артефакт'} ↗</a>`:'';$('#project-detail').innerHTML=`<p class="eyebrow">${p.type} / ${p.subtitle}</p><h2 class="case-heading">${p.name}</h2><p class="case-lead">${p.description}</p><div class="quest-tags">${p.tags.map(t=>`<span>${t}</span>`).join('')}</div><div class="case-actions">${demo}${p.github?`<a class="underlink" href="${p.github}" target="_blank" rel="noopener">Публичный репозиторий ↗</a>`:''}</div><div class="case-layout"><div><h3>Задача</h3><p>${p.challenge}</p><h3>Решения</h3><ul>${p.decisions.map(s=>`<li>${s}</li>`).join('')}</ul></div><div><h3>Результат</h3><p>${p.result}</p><h3>Ограничения</h3><p>${projectLimit(p)}</p></div></div>${['sandfox','two','starman','snow','sprouts','geo','minprav'].includes(p.id)?`<img class="case-preview" src="assets/${p.id}-preview.png" alt="Скриншот ${p.name}" onerror="this.hidden=true">`:''}`;}enhanceCase(p);if(!dialog.open)dialog.showModal();dialog.scrollTop=0;}
-document.addEventListener('click',e=>{const b=e.target.closest('[data-case]');if(b)openCase(b.dataset.case);});
+const dialog=$('#case-dialog');let returnHash='#work';
+function openCase(id,updateHistory=true){
+ const index=projects.findIndex(p=>p.id===id);if(index<0)return;
+ if(!dialog.open)returnHash=location.hash.startsWith('#project=')?'#work':(location.hash||'#work');
+ dialog.querySelectorAll('video').forEach(v=>v.pause());renderCase($('#project-detail'),projects[index],index,projects.length);
+ dialog.setAttribute('aria-labelledby','case-title');if(!dialog.open)dialog.showModal();dialog.scrollTop=0;
+ const title=$('#case-title');title.tabIndex=-1;title.focus({preventScroll:true});
+ if(updateHistory&&location.hash!=='#project='+id)history.pushState(null,'',location.pathname+location.search+'#project='+id);
+}
+document.addEventListener('click',e=>{
+ const direct=e.target.closest('[data-case]');if(direct){openCase(direct.dataset.case);return;}
+ const next=e.target.closest('[data-case-index]');if(next&&!next.disabled){const p=projects[Number(next.dataset.caseIndex)];if(p)openCase(p.id);return;}
+ if(e.target.closest('[data-close-case]')){dialog.close();requestAnimationFrame(()=>$('#work').scrollIntoView({behavior:matchMedia('(prefers-reduced-motion: reduce)').matches?'instant':'smooth'}));}
+});
 for(const d of [dialog,$('#game-dialog')]){d.querySelector('.close').onclick=()=>d.close();d.addEventListener('click',e=>{if(e.target===d){const r=d.getBoundingClientRect();if(e.clientX<r.left||e.clientX>r.right||e.clientY<r.top||e.clientY>r.bottom)d.close();}});}
-function deepLink(){if(location.hash.startsWith('#project='))openCase(decodeURIComponent(location.hash.slice(9)));}window.addEventListener('hashchange',deepLink);deepLink();
+dialog.addEventListener('close',()=>{dialog.querySelectorAll('video').forEach(v=>v.pause());if(location.hash.startsWith('#project='))history.replaceState(null,'',location.pathname+location.search+returnHash);});
+function deepLink(){if(location.hash.startsWith('#project=')){try{openCase(decodeURIComponent(location.hash.slice(9)),false);}catch{}}else if(dialog.open)dialog.close();}
+window.addEventListener('hashchange',deepLink);deepLink();
 try{document.body.classList.toggle('motion-off',localStorage.getItem('denis-motion')==='off');}catch{}
 function motionState(){$('#motion').setAttribute('aria-pressed',String(document.body.classList.contains('motion-off')));$('#motion').title=document.body.classList.contains('motion-off')?'Включить анимации':'Отключить анимации';}motionState();$('#motion').onclick=()=>{document.body.classList.toggle('motion-off');try{localStorage.setItem('denis-motion',document.body.classList.contains('motion-off')?'off':'on');}catch{}motionState();};
 let game,timer;
@@ -29,23 +42,3 @@ function boards(){for(const side of ['enemy','own']){const shots=side==='enemy'?
 function enemyTurn(){if(game.done)return;const cells=Array.from({length:64},(_,i)=>i).filter(c=>!game.enemyShots.has(c));const r=shoot(game.own,game.enemyShots,cells[Math.floor(Math.random()*cells.length)]);if(r.kind==='win'){game.done=true;game.busy=false;$('#game-status').textContent='Компьютер потопил ваш флот. Реванш?';}else if(r.kind==='miss'){game.busy=false;$('#game-status').textContent='Противник промахнулся. Ваш ход.';}else{$('#game-status').textContent='Противник попал. Ещё один выстрел.';timer=setTimeout(enemyTurn,600);}boards();}
 $('#enemy-board').onclick=e=>{const b=e.target.closest('[data-cell]');if(!b||game.busy||game.done)return;const r=shoot(game.enemy,game.playerShots,Number(b.dataset.cell));if(r.kind==='repeat')return;if(r.kind==='win'){game.done=true;$('#game-status').textContent='Победа! Все корабли противника потоплены.';}else if(r.kind==='miss'){game.busy=true;$('#game-status').textContent='Мимо. Ход противника.';timer=setTimeout(enemyTurn,600);}else $('#game-status').textContent=r.kind==='sunk'?'Корабль потоплен! Стреляйте ещё.':'Попадание! Ещё один выстрел.';boards();};$('#restart').onclick=reset;$('#open-game').onclick=()=>{$('#game-dialog').showModal();};$('#game-dialog').addEventListener('close',()=>{clearTimeout(timer);if(game.busy&&!game.done){game.busy=false;$('#game-status').textContent='Партия приостановлена. Ваш ход.';boards();}});reset();
 
-function enhanceCase(p){
- const root=$('#project-detail');
- const share=document.createElement('div');share.className='case-share';
- const shareButton=document.createElement('button');shareButton.type='button';shareButton.className='underlink';shareButton.dataset.share=p.id;shareButton.textContent='Скопировать ссылку на кейс';
- const shareStatus=document.createElement('span');shareStatus.className='share-status';shareStatus.setAttribute('role','status');share.append(shareButton,shareStatus);root.querySelector('h2').after(share);
-
- if(p.contribution){const box=document.createElement('section');box.className='contribution-panel';const h=document.createElement('h3');h.textContent='Задачи в проекте';const text=document.createElement('p');text.textContent=p.contribution;box.append(h,text);root.append(box);}
- if(p.image&&!root.querySelector('.case-preview')){const img=document.createElement('img');img.src=p.image;img.alt='Материалы проекта '+p.name;img.className='case-preview';root.append(img);if(p.imageCaption){const caption=document.createElement('p');caption.className='diagram-caption';caption.textContent=p.imageCaption;root.append(caption);}}
- if(p.gallery){const details=document.createElement('details');details.className='case-gallery';const summary=document.createElement('summary');summary.textContent='Посмотреть ещё графики';details.append(summary);for(const [src,alt] of p.gallery){const img=document.createElement('img');img.src=src;img.alt=alt;img.loading='lazy';details.append(img);}root.append(details);}
- if(p.video){const box=document.createElement('section');box.className='case-media';const h=document.createElement('h3');h.textContent='Короткое видео';const video=document.createElement('video');video.controls=true;video.preload='none';video.playsInline=true;video.src=p.video;if(p.image)video.poster=p.image;const caption=document.createElement('p');caption.className='media-caption';caption.textContent=p.videoLabel+' · без звука · не требует перехода на другой сайт';box.append(h,video,caption);root.append(box);}
-}
-dialog.addEventListener('close',()=>dialog.querySelectorAll('video').forEach(v=>v.pause()));
-function projectLimit(p){
- if(p.limits)return p.limits;
- if(p.type==='Roblox')return 'Незавершённая наработка. Текущая сцена в Roblox Studio не проверялась.';
- if(p.id==='oil')return 'Исследовательский черновик. Источники и событийные выводы требуют проверки.';
- if(['r-sales','sql-study'].includes(p.id))return 'Учебные данные и упрощённая модель.';
- if(p.status==='Демо')return 'Доступна браузерная версия.';
- return 'Показаны сохранённые материалы. Рабочий сервер к странице не подключён.';
-}
