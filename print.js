@@ -1,5 +1,5 @@
-import {projects} from './projects.js?v=navprint1';
-import {getDossier,caseImage,esc} from './case-dossiers.js?v=conclusions1';
+import {projects} from './projects.js?v=demos2';
+import {getDossier,caseImage,esc} from './case-dossiers.js?v=demos2';
 import {resumeMarkup,certificates} from './print-data.js?v=navprint1';
 const $=s=>document.querySelector(s),base='https://shalombaby666.github.io/';
 const absolute=path=>new URL(path,base).href;

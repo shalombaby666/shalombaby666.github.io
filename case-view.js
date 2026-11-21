@@ -1,4 +1,4 @@
-import {getDossier,caseImage,esc} from './case-dossiers.js?v=conclusions1';
+import {getDossier,caseImage,esc} from './case-dossiers.js?v=demos2';
 import {renderQuest} from './quests.js?v=navprint1';
 export function renderCase(root,p,index,total){
  const d=getDossier(p),image=caseImage(p);

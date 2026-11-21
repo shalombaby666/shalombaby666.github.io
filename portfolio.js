@@ -1,5 +1,5 @@
-import {projects} from './projects.js?v=navprint1';
-import {renderCase} from './case-view.js?v=conclusions1';
+import {projects} from './projects.js?v=demos2';
+import {renderCase} from './case-view.js?v=demos2';
 import {createFleet,shoot} from './battleship.js';
 const $=s=>document.querySelector(s);
 const symbols={sandfox:'░▒▓',two:'P1 P2',starman:'✦',snow:'❄',alfa:'→',repair:'m²',quality:'∑',bridge:'↔',sprouts:'♧',geo:'N E',minprav:'А Я'};
