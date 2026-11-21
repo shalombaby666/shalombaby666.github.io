@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+
+<html data-ev="solid" data-mode="light" data-skin="google" lang="ru">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1, viewport-fit=cover" name="viewport"/>
+<title>Окно — календарь студента</title>
+<meta content="Локальный календарь: события, повторения, импорт ICS и быстрый ввод без аккаунта." name="description"/>
+<meta content="#ffffff" name="theme-color"/>
+<link href="manifest.webmanifest" rel="manifest"/>
+<link href="icon.svg" rel="icon" type="image/svg+xml"/>
+<link href="icon.svg" rel="apple-touch-icon"/>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=Onest:wght@400;500;600&amp;family=Roboto:wght@400;500;700&amp;family=Unbounded:wght@500;600&amp;display=swap" rel="stylesheet"/>
+<link href="styles.css" rel="stylesheet"/>
+</head>
+<body><a class="portfolio-return" href="../../index.html#project=okno">← Кейс в портфолио</a>
+<svg aria-hidden="true" focusable="false" height="0" style="position:absolute" width="0">
+<defs>
+<symbol id="i-gear" viewbox="0 0 24 24"><circle cx="12" cy="12" r="3.2"></circle><path d="M19.4 14.5a1.7 1.7 0 0 0 .34 1.87l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.7 1.7 0 0 0-1.87-.34 1.7 1.7 0 0 0-1.03 1.56V21a2 2 0 1 1-4 0v-.09a1.7 1.7 0 0 0-1.11-1.56 1.7 1.7 0 0 0-1.87.34l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.7 1.7 0 0 0 .34-1.87 1.7 1.7 0 0 0-1.56-1.03H3a2 2 0 1 1 0-4h.09a1.7 1.7 0 0 0 1.56-1.11 1.7 1.7 0 0 0-.34-1.87l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.7 1.7 0 0 0 1.87.34h.01a1.7 1.7 0 0 0 1.03-1.56V3a2 2 0 1 1 4 0v.09a1.7 1.7 0 0 0 1.03 1.56 1.7 1.7 0 0 0 1.87-.34l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.7 1.7 0 0 0-.34 1.87v.01a1.7 1.7 0 0 0 1.56 1.03H21a2 2 0 1 1 0 4h-.09a1.7 1.7 0 0 0-1.56 1.03z"></path></symbol>
+<symbol id="i-mic" viewbox="0 0 24 24"><rect height="11" rx="3" width="6" x="9" y="3"></rect><path d="M5 11a7 7 0 0 0 14 0M12 18v3"></path></symbol>
+<symbol id="i-plus" viewbox="0 0 24 24"><path d="M12 5v14M5 12h14"></path></symbol>
+<symbol id="i-left" viewbox="0 0 24 24"><path d="M15 5l-7 7 7 7"></path></symbol>
+<symbol id="i-right" viewbox="0 0 24 24"><path d="M9 5l7 7-7 7"></path></symbol>
+<symbol id="i-menu" viewbox="0 0 24 24"><path d="M4 6.5h16M4 12h16M4 17.5h16"></path></symbol>
+<symbol id="i-check" viewbox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7.5"></path></symbol>
+<symbol id="i-refresh" viewbox="0 0 24 24"><path d="M20 11a8 8 0 0 0-14.9-3M4 5v4h4M4 13a8 8 0 0 0 14.9 3M20 19v-4h-4"></path></symbol>
+<symbol id="i-trash" viewbox="0 0 24 24"><path d="M4 7h16M10 11v6M14 11v6M6 7l1 13h10l1-13M9 7V4h6v3"></path></symbol>
+<symbol id="i-palette" viewbox="0 0 24 24"><path d="M12 3a9 9 0 1 0 0 18c1.2 0 2-.8 2-1.8 0-.5-.2-.9-.5-1.2-.3-.3-.5-.7-.5-1.2 0-1 .8-1.8 1.8-1.8H17a4 4 0 0 0 4-4C21 6.6 17 3 12 3z"></path><circle cx="7.5" cy="11" r=".9"></circle><circle cx="10.5" cy="7.2" r=".9"></circle><circle cx="15" cy="7.5" r=".9"></circle></symbol>
+<symbol id="i-spark" viewbox="0 0 24 24"><path d="M12 3l1.8 5.2L19 10l-5.2 1.8L12 17l-1.8-5.2L5 10l5.2-1.8zM19 16l.7 2 2 .7-2 .7-.7 2-.7-2-2-.7 2-.7z"></path></symbol>
+<symbol id="i-clock" viewbox="0 0 24 24"><circle cx="12" cy="12" r="9"></circle><path d="M12 7v5l3 2"></path></symbol>
+<symbol id="i-repeat" viewbox="0 0 24 24"><path d="M17 3l3 3-3 3M4 11V9a3 3 0 0 1 3-3h13M7 21l-3-3 3-3M20 13v2a3 3 0 0 1-3 3H4"></path></symbol>
+</defs>
+</svg>
+<div aria-hidden="true" class="sky"><i class="orb o1"></i><i class="orb o2"></i><i class="orb o3"></i></div>
+<div class="app">
+<header class="topbar">
+<button aria-label="Боковая панель" class="icon-btn" id="menu" type="button"><svg class="ic"><use href="#i-menu"></use></svg></button>
+<div class="brand"><img alt="" height="28" src="icon.svg" width="28"/><span>Окно</span></div>
+<button class="btn outline" id="today" type="button">Сегодня</button>
+<div class="nav">
+<button aria-label="Назад" class="icon-btn" id="prev" type="button"><svg class="ic"><use href="#i-left"></use></svg></button>
+<button aria-label="Вперёд" class="icon-btn" id="next" type="button"><svg class="ic"><use href="#i-right"></use></svg></button>
+</div>
+<h1 class="title"><span id="month-word">Октябрь</span> <span id="year"></span></h1>
+<span class="spacer"></span>
+<div aria-label="Вид календаря" class="seg" id="seg" role="group">
+<button data-view="day" type="button">День</button>
+<button data-view="week" id="seg-week" type="button">Неделя</button>
+<button data-view="month" type="button">Месяц</button>
+<button data-view="list" type="button">Список</button>
+</div>
+<div class="tools">
+<button aria-label="Оформление" class="icon-btn" id="open-theme" type="button"><svg class="ic"><use href="#i-palette"></use></svg></button>
+<button aria-label="Настройки" class="icon-btn" id="open-settings" type="button"><svg class="ic"><use href="#i-gear"></use></svg></button>
+</div>
+</header>
+<button class="statusbar" hidden="" id="statusbar" type="button"><i aria-hidden="true" class="dot"></i><span id="status-text"></span></button>
+<div class="body">
+<aside aria-label="Панель календаря" class="side" id="side">
+<button class="create" id="create" type="button"><svg class="ic"><use href="#i-plus"></use></svg>Создать</button>
+<section aria-label="Мини-календарь" class="mini">
+<div class="mini-h">
+<b id="mini-title"></b>
+<span>
+<button aria-label="Предыдущий месяц" class="icon-btn small" id="mini-prev" type="button"><svg class="ic"><use href="#i-left"></use></svg></button>
+<button aria-label="Следующий месяц" class="icon-btn small" id="mini-next" type="button"><svg class="ic"><use href="#i-right"></use></svg></button>
+</span>
+</div>
+<div aria-hidden="true" class="mini-wd"></div>
+<div class="mini-grid" id="mini-grid"></div>
+</section>
+<section aria-label="Повестка дня" class="agenda-side">
+<h2 id="ag-title">Сегодня</h2>
+<ul id="ag-list"></ul>
+</section>
+<section aria-label="Календари" class="cals">
+<h2>Мои календари</h2>
+<ul id="cal-list"></ul>
+</section>
+<div class="side-foot">
+<button class="btn outline" id="side-theme" type="button"><svg class="ic"><use href="#i-palette"></use></svg>Оформление</button>
+<button class="btn outline" id="side-settings" type="button"><svg class="ic"><use href="#i-gear"></use></svg>Настройки</button>
+</div>
+</aside>
+<div class="scrim" id="scrim"></div>
+<main class="main">
+<section aria-live="off" class="stage" id="stage"><div class="canvas" id="canvas"></div></section>
+<form autocomplete="off" class="compose" id="compose">
+<div class="preview" hidden="" id="preview"></div>
+<span aria-hidden="true" class="fx">fx</span>
+<button aria-label="Новое событие с подробностями" class="icon-btn" id="add-full" type="button"><svg class="ic"><use href="#i-plus"></use></svg></button>
+<input aria-label="Быстрая запись: что и когда" autocapitalize="off" enterkeyhint="send" id="quick" placeholder="Напишите: завтра в 15:00 стоматолог" spellcheck="false" type="text"/>
+<span class="ai-badge" hidden="" id="ai-badge" title="ИИ разбирает фразу, даже с ошибками"><svg class="ic"><use href="#i-spark"></use></svg></span>
+<button aria-label="Надиктовать" class="icon-btn" hidden="" id="mic" type="button"><svg class="ic"><use href="#i-mic"></use></svg></button>
+<button class="btn primary" id="go" type="submit">Записать</button>
+</form>
+</main>
+</div>
+</div>
+<!-- событие -->
+<dialog aria-labelledby="ev-title-h" id="ev-dialog">
+<form id="ev-form" method="dialog">
+<h2 id="ev-title-h">Событие</h2>
+<label class="field"><span>Название</span><input id="ev-title" maxlength="160" required="" type="text"/></label>
+<label class="field"><span>Дата</span><input id="ev-date" required="" type="date"/></label>
+<label class="check"><input id="ev-all" type="checkbox"/><span>Весь день</span></label>
+<div class="row2" id="ev-times">
+<label class="field"><span>Начало</span><input id="ev-start" type="time"/></label>
+<label class="field"><span>Конец</span><input id="ev-end" type="time"/></label>
+</div>
+<label class="field"><span>Повтор</span>
+<select id="ev-rep">
+<option value="">Не повторять</option>
+<option value="DAILY">Каждый день</option>
+<option value="WEEKDAYS">По будням</option>
+<option value="WEEKLY">Каждую неделю</option>
+<option value="BIWEEKLY">Раз в две недели</option>
+<option value="MONTHLY">Каждый месяц</option>
+</select>
+</label>
+<label class="field"><span>Место</span><input id="ev-place" maxlength="160" type="text"/></label>
+<div class="field" id="ev-hue-box"><span>Цвет</span><div aria-label="Цвет события" class="swatches" id="ev-hues" role="radiogroup"></div></div>
+<p class="hint" hidden="" id="ev-note"></p>
+<div class="actions">
+<button class="btn danger" hidden="" id="ev-del" type="button"><svg class="ic"><use href="#i-trash"></use></svg>Удалить</button>
+<span class="spacer"></span>
+<button class="btn outline" id="ev-cancel" type="button">Отмена</button>
+<button class="btn primary" id="ev-save" type="submit">Сохранить</button>
+</div>
+</form>
+</dialog>
+<!-- оформление -->
+<dialog aria-labelledby="th-h" id="theme-dialog">
+<div class="sheet">
+<h2 id="th-h">Оформление</h2>
+<section class="block">
+<h3>Стиль</h3>
+<div aria-label="Стиль" class="skins" id="skins" role="radiogroup"></div>
+</section>
+<section class="block" id="mode-box">
+<h3>Режим</h3>
+<div aria-label="Режим" class="seg small" id="mode-seg" role="group">
+<button data-m="auto" type="button">Как в системе</button>
+<button data-m="light" type="button">Светлый</button>
+<button data-m="dark" type="button">Тёмный</button>
+</div>
+</section>
+<section class="block">
+<h3>Цвет акцента</h3>
+<div aria-label="Цвет акцента" class="accents" id="accents" role="radiogroup"></div>
+</section>
+<section class="block" id="bg-box">
+<h3>Фон стекла</h3>
+<div aria-label="Фон" class="tiles" id="tiles" role="radiogroup"></div>
+<div id="custom-box">
+<div aria-label="Светлая или тёмная" class="seg small" id="c-mode" role="group">
+<button data-m="light" type="button">Светлая</button>
+<button data-m="dark" type="button">Тёмная</button>
+</div>
+<div class="pickers">
+<label class="pick"><input id="c-a" type="color"/><span>Верх</span></label>
+<label class="pick"><input id="c-b" type="color"/><span>Середина</span></label>
+<label class="pick"><input id="c-c" type="color"/><span>Низ</span></label>
+</div>
+</div>
+</section>
+<div class="actions"><span class="spacer"></span><button class="btn primary" id="th-close" type="button">Готово</button></div>
+</div>
+</dialog>
+<!-- настройки -->
+<dialog aria-labelledby="set-h" id="set-dialog">
+<div class="sheet">
+<h2 id="set-h">Настройки</h2>
+<section class="block">
+<h3>Расписание вуза</h3>
+<p class="hint">Вставьте ссылку на календарь (.ics) со страницы вашей группы или загрузите файл. Расписание обновляется само при открытии.</p>
+<form class="inline" id="src-form">
+<input aria-label="Ссылка на расписание" id="src-url" inputmode="url" placeholder="https://… .ics" type="url"/>
+<button class="btn primary" type="submit">Подключить</button>
+</form>
+<label class="btn outline file">
+        Загрузить файл .ics
+        <input accept=".ics,text/calendar" hidden="" id="src-file" type="file"/>
+</label>
+<ul class="srclist" id="src-list"></ul>
+<p class="hint" id="src-msg" role="status"></p>
+</section>
+<section class="block" hidden="">
+<h3>ИИ-помощник</h3>
+<p class="hint">Понимает фразы с опечатками и разговорной речью: «завтро в 3 стамотолог», «в пн и ср в 10 зал». Работает через ваш ключ API Claude. Ключ хранится только в этом браузере и уходит только в Anthropic. Без ключа работает встроенный разбор с исправлением опечаток.</p>
+<label class="check"><input id="ai-on" type="checkbox"/><span>Включить ИИ</span></label>
+<label class="field"><span>Ключ API</span><input autocomplete="off" id="ai-key" placeholder="sk-ant-…" spellcheck="false" type="password"/></label>
+<label class="field"><span>Модель</span><input id="ai-model" placeholder="claude-haiku-5-5" spellcheck="false" type="text"/></label>
+<div class="actions"><button class="btn outline" id="ai-test" type="button">Проверить</button></div>
+<p class="hint" id="ai-msg" role="status"></p>
+</section>
+<section class="block" hidden="">
+<h3>Google Calendar</h3>
+<p class="hint">Новые события будут записываться и в ваш Google Calendar. Нужен OAuth Client ID (тип «Веб-приложение») из Google Cloud Console, адрес этого сайта добавьте в «Разрешённые источники JavaScript».</p>
+<form class="inline" id="g-form">
+<input aria-label="Google Client ID" id="g-id" placeholder="1234…apps.googleusercontent.com" spellcheck="false" type="text"/>
+<button class="btn primary" id="g-btn" type="submit">Подключить</button>
+</form>
+<p class="hint" id="g-msg" role="status"></p>
+</section>
+<section class="block">
+<h3>Мои события</h3>
+<button class="btn outline" id="export" type="button">Скачать файл .ics</button>
+</section>
+<div class="actions">
+<span class="spacer"></span>
+<button class="btn primary" id="set-close" type="button">Готово</button>
+</div>
+</div>
+</dialog>
+<div aria-live="polite" class="toast" hidden="" id="toast" role="status">
+<span id="toast-text"></span>
+<span class="toast-acts" id="toast-acts"></span>
+</div>
+<script src="app.js"></script>
+</body>
+</html>

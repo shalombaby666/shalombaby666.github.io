@@ -1,4 +1,4 @@
-import {projects} from './projects.js?v=navprint1';
+import {projects} from './projects.js?v=additions1';
 
 for(const [id,count] of [
  ['stat-projects',projects.length],

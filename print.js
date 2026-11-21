@@ -1,6 +1,6 @@
-import {projects} from './projects.js?v=games3';
-import {getDossier,caseImage,esc} from './case-dossiers.js?v=games3';
-import {resumeMarkup,certificates} from './print-data.js?v=games3';
+import {projects} from './projects.js?v=additions1';
+import {getDossier,caseImage,esc} from './case-dossiers.js?v=additions1';
+import {resumeMarkup,certificates} from './print-data.js?v=additions1';
 const $=s=>document.querySelector(s),base='https://shalombaby666.github.io/';
 const absolute=path=>new URL(path,base).href;
 $('#case-id').innerHTML=projects.map(p=>`<option value="${p.id}">${esc(p.name)}</option>`).join('');
