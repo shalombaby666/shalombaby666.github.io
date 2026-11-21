@@ -1,6 +1,6 @@
 import {projects} from './projects.js?v=tunnels1';
 import {getDossier,caseImage,esc} from './case-dossiers.js?v=tunnels1';
-import {resumeMarkup,certificates} from './print-data.js?v=additions1';
+import {resumeMarkup,certificates} from './print-data.js?v=business1';
 const $=s=>document.querySelector(s),base='https://shalombaby666.github.io/';
 const absolute=path=>new URL(path,base).href;
 $('#case-id').innerHTML=projects.map(p=>`<option value="${p.id}">${esc(p.name)}</option>`).join('');
@@ -21,7 +21,7 @@ function render(){
  const selected=projects.find(p=>p.id===$('#case-id').value)||projects[0];
  if(view==='resume')$('#paper').innerHTML=resumeMarkup;
  else if(view==='case')$('#paper').innerHTML=`<section class="sheet"><p class="print-author">Денис Петров · <a href="https://t.me/shalombaby777">@shalombaby777</a></p>${caseMarkup(selected,images)}</section>`;
- else $('#paper').innerHTML=`<section class="sheet"><header class="portfolio-print-heading"><h1>Денис Петров</h1><p class="subtitle">Портфолио · аналитика данных и систем</p><p>18 лет. Второй курс, бизнес-аналитика. Ищу первую работу аналитиком данных или системным аналитиком. Английский — B2.</p><p><a href="${base}">Портфолио</a> · <a href="https://t.me/shalombaby777">Telegram: @shalombaby777</a></p></header>${projects.map(p=>caseMarkup(p,images)).join('')}<article class="print-materials"><h2>Учебные работы и доклады</h2><ul><li><a href="${absolute('materials/kpi/kpi.pdf')}">KPI менеджера по продажам — 8 слайдов</a></li><li>SWOT магазина фототоваров — <a href="${base}#materials">краткий разбор на сайте</a></li><li><a href="${absolute('materials/sanctions/sanctions.pdf')}">Экстерналии санкционного воздействия — 15 слайдов</a></li></ul><h2>Сертификаты Stepik</h2><ul>${certificates.map(c=>`<li><a href="${c.url}">${esc(c.title)}</a> · ${c.date.slice(0,4)}</li>`).join('')}</ul></article></section>`;
+ else $('#paper').innerHTML=`<section class="sheet"><header class="portfolio-print-heading"><h1>Денис Петров</h1><p class="subtitle">Портфолио · бизнес-аналитика и работа с данными</p><p>18 лет. Второй курс, бизнес-аналитика. Ищу первую работу бизнес-аналитиком. Анализ данных — дополнительное направление. Английский — B2.</p><p><a href="${base}">Портфолио</a> · <a href="https://t.me/shalombaby777">Telegram: @shalombaby777</a></p></header>${projects.map(p=>caseMarkup(p,images)).join('')}<article class="print-materials"><h2>Учебные работы и доклады</h2><ul><li><a href="${absolute('materials/kpi/kpi.pdf')}">KPI менеджера по продажам — 8 слайдов</a></li><li>SWOT магазина фототоваров — <a href="${base}#materials">краткий разбор на сайте</a></li><li><a href="${absolute('materials/sanctions/sanctions.pdf')}">Экстерналии санкционного воздействия — 15 слайдов</a></li></ul><h2>Сертификаты Stepik</h2><ul>${certificates.map(c=>`<li><a href="${c.url}">${esc(c.title)}</a> · ${c.date.slice(0,4)}</li>`).join('')}</ul></article></section>`;
  const title=view==='resume'?'Краткое резюме':view==='portfolio'?'Подробное портфолио':selected.name;
  document.title=`${title} — Денис Петров`;
  $('#preview-status').textContent=`${title} · ${paper} · ${orientation==='portrait'?'книжная':'альбомная'}${view!=='resume'&&images?' · с иллюстрациями':''}`;
