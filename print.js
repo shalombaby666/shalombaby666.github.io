@@ -1,6 +1,6 @@
 import {projects} from './projects.js?v=tunnels1';
-import {getDossier,caseImage,esc} from './case-dossiers.js?v=tunnels1';
-import {resumeMarkup,certificates} from './print-data.js?v=business1';
+import {getDossier,caseImage,esc} from './case-dossiers.js?v=resume22';
+import {resumeMarkup,certificates} from './print-data.js?v=resume22';
 const $=s=>document.querySelector(s),base='https://shalombaby666.github.io/';
 const absolute=path=>new URL(path,base).href;
 $('#case-id').innerHTML=projects.map(p=>`<option value="${p.id}">${esc(p.name)}</option>`).join('');
